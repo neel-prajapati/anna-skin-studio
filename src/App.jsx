@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import './App.css'
 
 const treatments = [
@@ -80,6 +81,163 @@ const expertiseAreas = [
   'Body Contouring',
 ]
 
+const serviceGroups = [
+  {
+    title: 'Advanced Skin Treatments',
+    description: 'Our most powerful, results-driven treatments using medical-grade technology to target deep skin concerns.',
+    icon: 'sparkle',
+    treatments: [
+      {
+        name: 'CO₂ Fractional Laser',
+        summary: 'Advanced skin resurfacing for scars, wrinkles, enlarged pores, and uneven texture.',
+        description: "This gold-standard laser creates micro-columns of thermal energy in the skin, triggering your body's natural healing response. New collagen production smooths scars, reduces wrinkles, and refines pores over 4–6 weeks. Ideal for acne scarring, sun damage, and age-related texture changes.",
+        duration: '45–60 min',
+        downtime: '5–7 days',
+      },
+      {
+        name: 'Q-Switched Laser',
+        summary: 'Precision pigmentation removal and tattoo removal with minimal downtime.',
+        description: 'Ultra-short pulses of light energy shatter pigment particles beneath the skin, which your body then naturally eliminates. Effective on sun spots, melasma, age spots, and all ink colours for tattoo removal.',
+        duration: '20–40 min',
+        downtime: '2–5 days',
+      },
+      {
+        name: 'Microneedling + Booster Therapy',
+        summary: 'Collagen-boosting treatment with custom mesotherapy cocktails for hydration & repair.',
+        description: 'Fine needles create controlled micro-injuries to stimulate collagen and elastin production. Combined with custom mesotherapy serums (hyaluronic acid, peptides, vitamins) that penetrate deep into the skin for enhanced results. A favourite for overall skin rejuvenation.',
+        duration: '60 min',
+        downtime: '1–3 days',
+      },
+      {
+        name: 'Radio Frequency Skin Tightening',
+        summary: 'Non-invasive lifting and firming using controlled thermal energy.',
+        description: 'RF energy heats the deeper layers of skin to stimulate collagen remodelling and elastin production. Results in tighter, firmer skin with improved contours — particularly effective on the jawline, neck, and around the eyes.',
+        duration: '30–45 min',
+        downtime: 'None',
+      },
+      {
+        name: 'HIFU (High-Intensity Focused Ultrasound)',
+        summary: 'Deep tissue lifting and contouring without surgery.',
+        description: 'Ultrasound energy targets the deep structural layers of the skin (SMAS layer) — the same layer addressed in surgical facelifts. Stimulates long-term collagen renewal for natural lifting and tightening that improves over 2–3 months.',
+        duration: '60–90 min',
+        downtime: 'None',
+      },
+      {
+        name: 'IPL Laser',
+        summary: 'Broad-spectrum light therapy for pigmentation, redness, and vascular concerns.',
+        description: 'Intense pulsed light targets melanin and haemoglobin to treat sun spots, rosacea, broken capillaries, and diffuse redness. Evens skin tone and improves overall clarity with minimal discomfort.',
+        duration: '30 min',
+        downtime: '1–3 days',
+      },
+      {
+        name: 'Hair Loss & Scalp Rejuvenation',
+        summary: 'Stimulate follicle regrowth and improve scalp health with targeted therapy.',
+        description: 'A combination of laser therapy and specialised scalp treatments designed to improve blood circulation, nourish dormant follicles, and promote healthier, thicker hair growth. Suitable for both men and women experiencing thinning.',
+        duration: '45 min',
+        downtime: 'None',
+      },
+    ],
+  },
+  {
+    title: 'Advanced Facial & Skin Therapy',
+    description: 'Luxurious facial treatments combining clinical-grade ingredients with relaxing techniques for visible results.',
+    icon: 'flask',
+    treatments: [
+      {
+        name: 'Carbon Laser Peel',
+        summary: "Deep-cleansing 'Hollywood Peel' for oil control, pore refinement, and instant glow.",
+        description: 'A layer of liquid carbon is applied to the skin, then vaporised with a laser. This process deeply cleanses pores, reduces oiliness, and stimulates collagen — a red-carpet favourite.',
+        duration: '30 min',
+        downtime: 'None',
+      },
+      {
+        name: 'Deep Cleansing & Hydration Facial',
+        summary: 'Multi-step facial with extraction, hydration infusion, and LED light therapy.',
+        description: 'A comprehensive facial experience including double cleansing, gentle exfoliation, professional extractions, targeted serum infusion, and LED light therapy. Customised to your skin type for deep nourishment and a healthy glow.',
+        duration: '60–75 min',
+        downtime: 'None',
+      },
+      {
+        name: 'Microdermabrasion',
+        summary: 'Crystal-free exfoliation to smooth texture and boost product absorption.',
+        description: 'A diamond-tip handpiece gently resurfaces the outermost layer of skin, removing dead cells and improving texture. Excellent as a standalone treatment or as preparation before other advanced treatments for enhanced product penetration.',
+        duration: '30–40 min',
+        downtime: 'None',
+      },
+      {
+        name: 'Galvanic Therapy',
+        summary: 'Electrical current-assisted deep product penetration for enhanced nourishment.',
+        description: 'Low-level galvanic current drives active ingredients deeper into the skin than topical application alone. Ideal for boosting hydration, reducing puffiness, and improving the efficacy of your treatment serums.',
+        duration: '30 min',
+        downtime: 'None',
+      },
+      {
+        name: 'Oxygen Therapy',
+        summary: 'Pressurised oxygen infusion for instant hydration, plumping, and radiance.',
+        description: 'Hyperbaric oxygen is infused into the skin along with custom serums containing hyaluronic acid, peptides, and botanical extracts. Instantly plumps and hydrates for a dewy, refreshed complexion. Perfect before events.',
+        duration: '45 min',
+        downtime: 'None',
+      },
+      {
+        name: 'SQT Bio-Microneedling',
+        summary: 'Natural spicule-based treatment stimulating collagen without traditional needles.',
+        description: 'Derived from natural sea sponge spicules, this treatment creates micro-channels in the skin to stimulate collagen and cell renewal — without the use of mechanical needles. Effective for acne, pigmentation, fine lines, and overall skin renewal.',
+        duration: '45 min',
+        downtime: '2–3 days',
+      },
+      {
+        name: 'Advanced Chemical Peels',
+        summary: 'Medical-grade peels customised to your skin type for renewal and brightening.',
+        description: "Professional-strength acid peels (glycolic, lactic, salicylic, or combination) dissolve dead skin cells and stimulate cellular turnover. Tailored to your skin's needs — from gentle brightening to deep resurfacing for scarring and hyperpigmentation.",
+        duration: '30–45 min',
+        downtime: '3–7 days',
+      },
+    ],
+  },
+  {
+    title: 'Hair Removal & Body Treatments',
+    description: 'Comprehensive body treatments from permanent hair reduction to non-surgical contouring solutions.',
+    icon: 'scissors',
+    treatments: [
+      {
+        name: 'Laser Hair Removal',
+        summary: 'Long-lasting hair reduction for face and body using advanced IPL/laser technology.',
+        description: 'Light energy targets the melanin in hair follicles, disabling regrowth at the root. Suitable for most skin types and body areas including face, underarms, bikini, legs, and back. Multiple sessions achieve progressive, long-lasting smoothness.',
+        duration: '15–60 min',
+        downtime: 'None',
+      },
+      {
+        name: 'Fat Cavitation',
+        summary: 'Ultrasound-based fat cell disruption for non-invasive body sculpting.',
+        description: 'Low-frequency ultrasound waves create pressure changes that rupture fat cell membranes, releasing their contents for natural elimination by the body. Targets stubborn fat deposits on the abdomen, thighs, and flanks.',
+        duration: '30–45 min',
+        downtime: 'None',
+      },
+      {
+        name: 'RF Body Contouring',
+        summary: 'Radiofrequency skin tightening for a firmer, smoother body silhouette.',
+        description: 'Controlled radiofrequency energy heats the dermal layer to stimulate collagen contraction and new collagen production. Tightens loose skin after weight loss or aging, and improves the appearance of cellulite.',
+        duration: '30–45 min',
+        downtime: 'None',
+      },
+      {
+        name: 'Cosmetic Tattoo – Lip Blush',
+        summary: 'Semi-permanent lip colour for natural-looking definition and fullness.',
+        description: 'A delicate tattooing technique deposits custom-blended pigment into the lips for a soft, natural-looking wash of colour. Enhances lip shape, symmetry, and definition — lasting 2–3 years with proper care.',
+        duration: '90–120 min',
+        downtime: '3–5 days',
+      },
+      {
+        name: 'Body Tattoo Removal',
+        summary: 'Precision Q-Switched laser removal for unwanted body tattoos.',
+        description: 'The Q-Switched laser delivers rapid, high-intensity pulses that fragment tattoo ink particles beneath the skin. Your immune system then gradually clears the fragmented ink. Multiple sessions are typically needed depending on ink colour, depth, and age.',
+        duration: '15–30 min',
+        downtime: '3–7 days',
+      },
+    ],
+  },
+]
+
 const iconPaths = {
   laser: <><path d="m13 2-3 8h7l-6 12 1-9H6l7-11Z" /></>,
   sparkle: <><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z" /><path d="m19 14 1.1 2.4L22.5 17l-2.4 1.1L19 20.5l-1.1-2.4-2.4-1.1 2.4-.6L19 14Z" /></>,
@@ -91,16 +249,90 @@ const iconPaths = {
 
 function Brand({ light = false }) {
   return (
-    <a className={`brand${light ? ' brand-light' : ''}`} href="/" aria-label="Anna Skin Care home">
+    <Link className={`brand${light ? ' brand-light' : ''}`} to="/" aria-label="Anna Skin Care home">
       <span className="brand-name">Anna<span className="brand-butterfly">✿</span></span>
       <span className="brand-subtitle">skin care</span>
-    </a>
+    </Link>
+  )
+}
+
+function ServicePage() {
+  const [openTreatments, setOpenTreatments] = useState(() => new Set())
+
+  return (
+    <section className="services-page">
+      <div className="service-intro section-pad">
+        <p className="eyebrow">What we offer</p>
+        <h1>Our Treatments</h1>
+        <span className="short-rule" />
+        <p>
+          Every treatment at Anna Skin Adelaide is carefully selected and performed using medical-grade, TGA-approved technology. All treatments begin with a thorough skin consultation to ensure the most effective and safe plan for your unique needs.
+        </p>
+      </div>
+      {serviceGroups.map((group) => (
+        <section className="service-group section-pad" key={group.title}>
+          <div className="service-group-heading">
+            <svg className="service-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              {iconPaths[group.icon]}
+            </svg>
+            <div>
+              <h2>{group.title}</h2>
+              <p>{group.description}</p>
+            </div>
+          </div>
+          <div className="service-accordion">
+            {group.treatments.map((treatment) => {
+              const isOpen = openTreatments.has(treatment.name)
+              const panelId = `treatment-${treatment.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+              return (
+                <article className={`service-card${isOpen ? ' is-open' : ''}`} key={treatment.name}>
+                  <button
+                    className="service-card-toggle"
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    onClick={() => setOpenTreatments((previous) => {
+                      const next = new Set(previous)
+                      if (isOpen) next.delete(treatment.name)
+                      else next.add(treatment.name)
+                      return next
+                    })}
+                  >
+                    <span>
+                      <span className="service-card-title">{treatment.name}</span>
+                      <span className="service-card-summary">{treatment.summary}</span>
+                    </span>
+                    <svg className="service-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                  <div className="service-card-details" id={panelId} hidden={!isOpen}>
+                      <p>{treatment.description}</p>
+                      <div className="service-meta">
+                        <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>{treatment.duration}</span>
+                        <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" /></svg>Downtime: {treatment.downtime}</span>
+                      </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </section>
+      ))}
+      <section className="service-consult section-pad">
+        <p className="eyebrow">Not sure where to start?</p>
+        <h2>Book a Free Skin<br />Consultation</h2>
+        <p>Every skin journey is unique. Let Anna assess your skin and recommend the perfect treatment plan — no obligation, no pressure.</p>
+        <Link className="button button-brown" to="/contact" target="_blank">Get in touch</Link>
+      </section>
+    </section>
   )
 }
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const requestedPage = window.location.pathname.split('/').filter(Boolean)[0] || 'home'
+  const { pathname } = useLocation()
+  const requestedPage = pathname.split('/').filter(Boolean)[0] || 'home'
   const page = ['about', 'services', 'pricing', 'contact'].includes(requestedPage)
     ? requestedPage
     : 'home'
@@ -112,17 +344,17 @@ function App() {
         <div className="header-inner">
           <Brand />
           <nav className={`main-nav${menuOpen ? ' is-open' : ''}`} aria-label="Main navigation">
-            <a href="/about" target="_blank" rel="noreferrer" onClick={closeMenu}>About</a>
-            <a href="/services" target="_blank" rel="noreferrer" onClick={closeMenu}>Services</a>
-            <a href="/pricing" target="_blank" rel="noreferrer" onClick={closeMenu}>Pricing</a>
-            <a href="/contact" target="_blank" rel="noreferrer" onClick={closeMenu}>Contact</a>
-            <a className="mobile-book" href="/contact" target="_blank" rel="noreferrer" onClick={closeMenu}>Book Now</a>
+            <Link to="/about" target="_blank" rel="noreferrer" onClick={closeMenu}>About</Link>
+            <Link to="/services" target="_blank" rel="noreferrer" onClick={closeMenu}>Services</Link>
+            <Link to="/pricing" target="_blank" rel="noreferrer" onClick={closeMenu}>Pricing</Link>
+            <Link to="/contact" target="_blank" rel="noreferrer" onClick={closeMenu}>Contact</Link>
+            <Link className="mobile-book" to="/contact" target="_blank" rel="noreferrer" onClick={closeMenu}>Book Now</Link>
             <div className="mobile-menu-footer">
               <span />
               <p>Adelaide&apos;s boutique skin studio</p>
             </div>
           </nav>
-          <a className="header-book" href="/contact" target="_blank" rel="noreferrer">Book Now</a>
+          <Link className="header-book" to="/contact" target="_blank" rel="noreferrer">Book Now</Link>
           <button
             className={`menu-toggle${menuOpen ? ' is-open' : ''}`}
             type="button"
@@ -137,7 +369,9 @@ function App() {
         </div>
       </header>
 
-      <main className={`page-content page-${page}`}>
+      <Routes>
+      <Route path="/:page?" element={<main className={`page-content page-${page}`}>
+        {page === 'services' ? <ServicePage /> : <>
         {page === 'home' && <section className="hero" id="home">
           <div className="hero-shade" />
           <div className="hero-content">
@@ -177,7 +411,7 @@ function App() {
               <div><strong>500<span>+</span></strong><small>Happy clients</small></div>
               <div><strong>30<span>+</span></strong><small>Treatments</small></div>
             </div>
-            <a className="button button-outline-dark" href="#contact">Learn more</a>
+            <Link className="button button-outline-dark" to="/about">Learn more</Link>
 
             {/* <a className="text-link" href="#results">Discover our approach <span>↗</span></a> */}
           </div>
@@ -358,7 +592,7 @@ function App() {
           <p className="contact-copy">Start your transformation with a personalised consultation. Let Anna assess your skin and recommend the perfect treatment plan — no obligation, no pressure.</p>
           <div className="contact-actions">
             <a className="button button-brown" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Book a consultation</a>
-            <a className="button button-outline-brown" href="/pricing" target="_blank" rel="noreferrer">View Pricing</a>
+            <Link className="button button-outline-brown" to="/pricing" target="_blank" rel="noreferrer">View Pricing</Link>
           </div>
           <span className="contact-flower" aria-hidden="true">✳</span>
         </section>
@@ -378,7 +612,10 @@ function App() {
             ))}
           </div>
         </section>
-      </main>
+        </>}
+      </main>} />
+      <Route path="*" element={<main className="page-content page-not-found"><section className="section-pad"><h1>Page not found</h1><Link to="/">Return home</Link></section></main>} />
+      </Routes>
 
       <footer className="site-footer">
         <div className="footer-top">
@@ -387,8 +624,8 @@ function App() {
             <p>Adelaide’s boutique skin specialist studio.</p>
           </div>
           <div className="footer-links">
-            <div><span className="footer-title">Explore</span><a href="/about">About</a><a href="/services">Services</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
-            <div><span className="footer-title">Get in touch</span><a href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Instagram</a><a href="/contact">Book Now</a><span>Adelaide, South Australia</span></div>
+            <div><span className="footer-title">Explore</span><Link to="/about">About</Link><Link to="/services">Services</Link><Link to="/pricing">Pricing</Link><Link to="/contact">Contact</Link></div>
+            <div><span className="footer-title">Get in touch</span><a href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Instagram</a><Link to="/contact">Book Now</Link><span>Adelaide, South Australia</span></div>
           </div>
         </div>
         <div className="footer-bottom"><span>© 2026 Anna Skin Care</span><span>Thoughtful care. Beautiful skin.</span></div>

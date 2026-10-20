@@ -178,7 +178,7 @@ button {
 }
 
 .page-about > section:not(.intro):not(.meet-anna):not(.why-choose):not(.approach):not(.partners):not(.testimonials),
-.page-services > section:not(.services):not(.approach):not(.expertise):not(.partners),
+.page-services > section:not(.services-page),
 .page-pricing > section:not(.pricing),
 .page-contact > section:not(.contact):not(.faqs) {
   display: none;
@@ -186,6 +186,206 @@ button {
 
 .page-home > .pricing {
   display: none;
+}
+
+.services-page {
+  background: var(--ivory);
+}
+
+.service-intro {
+  padding-top: 92px;
+  padding-bottom: 125px;
+  text-align: center;
+}
+
+.service-intro .eyebrow {
+  margin-bottom: 20px;
+}
+
+.service-intro h1 {
+  margin: 0;
+  font-size: clamp(52px, 6vw, 76px);
+  letter-spacing: -1.3px;
+  line-height: 1.05;
+}
+
+.service-intro .short-rule {
+  margin: 27px auto 37px;
+}
+
+.service-intro > p:last-child {
+  max-width: 790px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.9;
+}
+
+.service-group.section-pad {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0 auto 105px;
+}
+
+.service-group-heading {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 0 0 46px;
+  margin-bottom: 56px;
+  border-bottom: 1px solid var(--line);
+}
+
+.service-group-icon {
+  width: 42px;
+  height: 42px;
+  color: var(--clay);
+}
+
+.service-group-heading h2 {
+  margin: 0 0 8px;
+  font-size: clamp(39px, 5vw, 59px);
+  line-height: 1.08;
+}
+
+.service-group-heading p {
+  max-width: 830px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.service-accordion {
+  display: grid;
+  gap: 20px;
+}
+
+.service-card {
+  padding: 39px 42px;
+  border: 1px solid #ded4ce;
+  background: #f6f0ed;
+}
+
+.service-card-toggle {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.service-card-toggle > span {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.service-card-title {
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 37px;
+  font-weight: 600;
+  line-height: 1.13;
+}
+
+.service-card-summary {
+  max-width: 920px;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+.service-chevron {
+  width: 23px;
+  height: 23px;
+  flex: 0 0 auto;
+  margin-top: 9px;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 180ms ease;
+}
+
+.service-card.is-open .service-chevron {
+  transform: rotate(180deg);
+}
+
+.service-card-details {
+  padding-top: 43px;
+}
+
+.service-card-details[hidden] {
+  display: none;
+}
+
+.service-card-details > p {
+  margin: 0 0 34px;
+  color: var(--muted);
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+.service-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 35px;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.service-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.service-meta svg {
+  width: 23px;
+  height: 23px;
+  stroke: var(--clay);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.service-consult {
+  max-width: 1000px;
+  margin: 0 auto 100px;
+  border: 1px solid #ded4ce;
+  background: #f6f0ed;
+  text-align: center;
+}
+
+.service-consult .eyebrow {
+  color: var(--clay);
+}
+
+.service-consult h2 {
+  margin: 0;
+  font-size: clamp(44px, 5vw, 60px);
+  line-height: 1.08;
+}
+
+.service-consult > p:not(.eyebrow) {
+  max-width: 660px;
+  margin: 25px auto 30px;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.75;
 }
 
 .hero {
@@ -1148,6 +1348,23 @@ blockquote {
     padding: 86px 38px;
   }
 
+  .service-intro {
+    padding-top: 78px;
+    padding-bottom: 95px;
+  }
+
+  .service-group-heading {
+    margin-bottom: 40px;
+  }
+
+  .service-group.section-pad {
+    margin-bottom: 85px;
+  }
+
+  .service-card {
+    padding: 34px;
+  }
+
   .intro {
     gap: 50px;
   }
@@ -1359,6 +1576,115 @@ blockquote {
 
   .section-pad {
     padding: 76px 25px;
+  }
+
+  .service-intro {
+    padding: 76px 25px 95px;
+  }
+
+  .service-intro .eyebrow {
+    margin-bottom: 17px;
+  }
+
+  .service-intro h1 {
+    font-size: 55px;
+  }
+
+  .service-intro .short-rule {
+    margin: 23px auto 29px;
+  }
+
+  .service-intro > p:last-child {
+    font-size: 16px;
+    line-height: 1.85;
+  }
+
+  .service-group.section-pad {
+    padding: 0 25px;
+    margin-bottom: 75px;
+  }
+
+  .service-group-heading {
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    padding-bottom: 32px;
+    margin-bottom: 36px;
+  }
+
+  .service-group-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .service-group-heading h2 {
+    font-size: 38px;
+  }
+
+  .service-group-heading p {
+    font-size: 15px;
+  }
+
+  .service-accordion {
+    gap: 16px;
+  }
+
+  .service-card {
+    padding: 28px 21px;
+  }
+
+  .service-card-toggle {
+    gap: 14px;
+  }
+
+  .service-card-toggle > span {
+    gap: 8px;
+  }
+
+  .service-card-title {
+    font-size: 30px;
+  }
+
+  .service-card-summary {
+    font-size: 15px;
+  }
+
+  .service-chevron {
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+  }
+
+  .service-card-details {
+    padding-top: 30px;
+  }
+
+  .service-card-details > p {
+    margin-bottom: 25px;
+    font-size: 16px;
+    line-height: 1.72;
+  }
+
+  .service-meta {
+    gap: 15px 20px;
+    font-size: 14px;
+  }
+
+  .service-meta svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .service-consult.section-pad {
+    padding: 58px 25px;
+    margin: 0 25px 65px;
+  }
+
+  .service-consult h2 {
+    font-size: 45px;
+  }
+
+  .service-consult > p:not(.eyebrow) {
+    font-size: 15px;
   }
 
   .eyebrow {
