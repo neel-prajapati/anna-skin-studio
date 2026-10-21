@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
+import PricingPage from './pages/PricingPage'
+import ServicesPage from './pages/ServicesPage'
 import './App.css'
 
 const treatments = [
@@ -238,6 +240,76 @@ const serviceGroups = [
   },
 ]
 
+const pricingCategories = [
+  {
+    title: 'Hydrafacial Treatments',
+    badge: 'Sale',
+    treatments: [
+      { name: 'Signature Hydrafacial', originalPrice: '$168', price: '$140' },
+      { name: 'Deluxe Hydrafacial', originalPrice: '$192', price: '$160' },
+      { name: 'Platinum Hydrafacial', originalPrice: '$210', price: '$175' },
+      { name: 'Teen / Acne-Prone Hydrafacial', originalPrice: '$179', price: '$149' },
+      { name: 'Microneedling w/ Booster', originalPrice: '$198', price: '$165' },
+    ],
+  },
+  {
+    title: 'IPL Laser',
+    treatments: [
+      { name: 'Full Face – Pigmentation', price: '$149' },
+      { name: 'Full Face – Skin Rejuvenation', price: '$139' },
+      { name: 'Full Face – Vascular & Redness', price: '$139' },
+      { name: 'Cheeks / Nose – Pigmentation or Redness', price: '$65' },
+      { name: 'Neck', price: '$70' },
+      { name: 'Full Face + Neck', price: '$179' },
+      { name: 'Full Face + Neck + Décolletage', price: '$220' },
+      { name: '3-Session Package – Rejuvenation', price: '$319' },
+    ],
+  },
+  {
+    title: 'HIFU + Radio Frequency',
+    badge: 'Free RF session',
+    treatments: [
+      { name: 'Full Face Lifting', price: '$345' },
+      { name: 'Eye Area & Brow Lifting', price: '$129' },
+      { name: 'Double Chin & Jawline', price: '$179' },
+      { name: 'Full Face + Double Chin', price: '$450' },
+    ],
+  },
+  {
+    title: 'Chemical Peels',
+    treatments: [
+      { name: 'Glow Refresh Peel', price: '$140' },
+      { name: 'Acne Clarifying Peel', price: '$150' },
+      { name: 'Melanostop Depigment Peel', price: '$180' },
+      { name: 'Premium Combination Peel', price: '$190' },
+    ],
+  },
+  {
+    title: 'Specialty Treatments',
+    badge: 'Sale',
+    treatments: [
+      { name: 'CO2 Fractional Laser', originalPrice: '$700', price: '$350' },
+      { name: 'Premium Microneedling with Exosome (Exomide)', price: '$245' },
+      { name: 'Mesotherapy Booster – Single Session', price: '$165' },
+      { name: 'Mesotherapy Booster – 3 Sessions', price: '$425' },
+      { name: 'SQT Bio Microneedling', originalPrice: '$350', price: '$249' },
+      { name: 'Exosome Therapy with Microneedling', originalPrice: '$249', price: '$199' },
+      { name: 'Hair Loss Treatment – Single Session', price: '$160' },
+      { name: 'Hair Loss Treatment – 3 Sessions', price: '$429' },
+    ],
+  },
+  {
+    title: 'Tattoo Removal',
+    treatments: [
+      { name: 'Eyebrow Tattoo Removal – 1 Session', price: '$170' },
+      { name: 'Body XS – 1 Session / 3 Sessions', price: '$80 / $210' },
+      { name: 'Body S – 1 Session / 3 Sessions', price: '$120 / $320' },
+      { name: 'Body M – 1 Session / 3 Sessions', price: '$180 / $470' },
+      { name: 'Body L – 1 Session / 3 Sessions', price: '$250 / $650' },
+    ],
+  },
+]
+
 const iconPaths = {
   laser: <><path d="m13 2-3 8h7l-6 12 1-9H6l7-11Z" /></>,
   sparkle: <><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z" /><path d="m19 14 1.1 2.4L22.5 17l-2.4 1.1L19 20.5l-1.1-2.4-2.4-1.1 2.4-.6L19 14Z" /></>,
@@ -250,93 +322,22 @@ const iconPaths = {
 function Brand({ light = false }) {
   return (
     <Link className={`brand${light ? ' brand-light' : ''}`} to="/" aria-label="Anna Skin Care home">
-      <span className="brand-name">Anna<span className="brand-butterfly">✿</span></span>
-      <span className="brand-subtitle">skin care</span>
+      <img className="brand-logo" src="/img/logo200.png" alt="Anna Skin Care" />
     </Link>
-  )
-}
-
-function ServicePage() {
-  const [openTreatments, setOpenTreatments] = useState(() => new Set())
-
-  return (
-    <section className="services-page">
-      <div className="service-intro section-pad">
-        <p className="eyebrow">What we offer</p>
-        <h1>Our Treatments</h1>
-        <span className="short-rule" />
-        <p>
-          Every treatment at Anna Skin Adelaide is carefully selected and performed using medical-grade, TGA-approved technology. All treatments begin with a thorough skin consultation to ensure the most effective and safe plan for your unique needs.
-        </p>
-      </div>
-      {serviceGroups.map((group) => (
-        <section className="service-group section-pad" key={group.title}>
-          <div className="service-group-heading">
-            <svg className="service-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              {iconPaths[group.icon]}
-            </svg>
-            <div>
-              <h2>{group.title}</h2>
-              <p>{group.description}</p>
-            </div>
-          </div>
-          <div className="service-accordion">
-            {group.treatments.map((treatment) => {
-              const isOpen = openTreatments.has(treatment.name)
-              const panelId = `treatment-${treatment.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
-              return (
-                <article className={`service-card${isOpen ? ' is-open' : ''}`} key={treatment.name}>
-                  <button
-                    className="service-card-toggle"
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    onClick={() => setOpenTreatments((previous) => {
-                      const next = new Set(previous)
-                      if (isOpen) next.delete(treatment.name)
-                      else next.add(treatment.name)
-                      return next
-                    })}
-                  >
-                    <span>
-                      <span className="service-card-title">{treatment.name}</span>
-                      <span className="service-card-summary">{treatment.summary}</span>
-                    </span>
-                    <svg className="service-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </button>
-                  <div className="service-card-details" id={panelId} hidden={!isOpen}>
-                      <p>{treatment.description}</p>
-                      <div className="service-meta">
-                        <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>{treatment.duration}</span>
-                        <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" /></svg>Downtime: {treatment.downtime}</span>
-                      </div>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        </section>
-      ))}
-      <section className="service-consult section-pad">
-        <p className="eyebrow">Not sure where to start?</p>
-        <h2>Book a Free Skin<br />Consultation</h2>
-        <p>Every skin journey is unique. Let Anna assess your skin and recommend the perfect treatment plan — no obligation, no pressure.</p>
-        <Link className="button button-brown" to="/contact" target="_blank">Get in touch</Link>
-      </section>
-    </section>
   )
 }
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const { pathname } = useLocation()
+  const { pathname, key } = useLocation()
   const requestedPage = pathname.split('/').filter(Boolean)[0] || 'home'
-  const page = ['about', 'services', 'pricing', 'contact'].includes(requestedPage)
-    ? requestedPage
-    : 'home'
+  const page = ['home', 'about', 'services', 'pricing', 'contact'].includes(requestedPage)
+    ? requestedPage : 'not-found'
   const closeMenu = () => setMenuOpen(false)
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [key])
 
   return (
     <>
@@ -344,17 +345,17 @@ function App() {
         <div className="header-inner">
           <Brand />
           <nav className={`main-nav${menuOpen ? ' is-open' : ''}`} aria-label="Main navigation">
-            <Link to="/about" target="_blank" rel="noreferrer" onClick={closeMenu}>About</Link>
-            <Link to="/services" target="_blank" rel="noreferrer" onClick={closeMenu}>Services</Link>
-            <Link to="/pricing" target="_blank" rel="noreferrer" onClick={closeMenu}>Pricing</Link>
-            <Link to="/contact" target="_blank" rel="noreferrer" onClick={closeMenu}>Contact</Link>
-            <Link className="mobile-book" to="/contact" target="_blank" rel="noreferrer" onClick={closeMenu}>Book Now</Link>
+            <Link to="/about" onClick={closeMenu}>About</Link>
+            <Link to="/services" onClick={closeMenu}>Services</Link>
+            <Link to="/pricing" onClick={closeMenu}>Pricing</Link>
+            <Link to="/contact" onClick={closeMenu}>Contact</Link>
+            <a className="mobile-book" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer" onClick={closeMenu}>Book Now</a>
             <div className="mobile-menu-footer">
               <span />
               <p>Adelaide&apos;s boutique skin studio</p>
             </div>
           </nav>
-          <Link className="header-book" to="/contact" target="_blank" rel="noreferrer">Book Now</Link>
+          <a className="header-book" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Book Now</a>
           <button
             className={`menu-toggle${menuOpen ? ' is-open' : ''}`}
             type="button"
@@ -370,9 +371,21 @@ function App() {
       </header>
 
       <Routes>
+      <Route path="/services" element={<ServicesPage groups={serviceGroups} />} />
+      <Route path="/pricing" element={<PricingPage categories={pricingCategories} />} />
       <Route path="/:page?" element={<main className={`page-content page-${page}`}>
-        {page === 'services' ? <ServicePage /> : <>
+        {page === 'not-found' ? (
+          <section className="section-pad">
+            <h1>Page not found</h1>
+            <Link to="/">Return home</Link>
+          </section>
+        ) : <>
         {page === 'home' && <section className="hero" id="home">
+          <div className="hero-gallery" aria-hidden="true">
+            <img src="/img/_TAN5816.jpg" alt="" fetchPriority="high" />
+            <img src="/img/_TAN5876.jpg" alt="" fetchPriority="high" />
+            <img src="/img/_TAN5940.jpg" alt="" fetchPriority="high" />
+          </div>
           <div className="hero-shade" />
           <div className="hero-content">
             <p className="eyebrow eyebrow-light">Adelaide’s boutique skin specialist studio</p>
@@ -381,8 +394,8 @@ function App() {
               Over 12 years of advanced Adelaide skin care. Medical-grade treatments personalised by your trusted skin specialist to reveal your most radiant self.
             </p>
             <div className="hero-actions">
-              <a className="button button-light" href="#contact">Book an appointment</a>
-              <a className="button button-outline-light" href="#services">View treatments</a>
+              <a className="button button-light" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Book an appointment</a>
+              <Link className="button button-outline-light" to="/services">View treatments</Link>
             </div>
             <a className="scroll-cue" href="#about" aria-label="Scroll to learn about Anna Skin Care">
               <span />
@@ -394,8 +407,9 @@ function App() {
         <section className="intro section-pad" id="about">
           <div className="intro-image">
             <img
-              src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1100&q=85"
-              alt="A relaxing, professional facial treatment"
+              src="/img/results1.jpg"
+              alt="Anna performing a focused skin treatment"
+              loading="lazy"
             />
             <span className="image-caption">A considered approach to your skin</span>
           </div>
@@ -418,25 +432,31 @@ function App() {
         </section>
 
         <section className="meet-anna section-pad" id="meet-anna">
-          <div className="meet-anna-content">
-            <p className="eyebrow">Meet Anna</p>
-            <h2>A Passion Born From Purpose</h2>
-            <p>
-              Anna&apos;s journey into skincare began with a personal mission — to help people feel confident in their own skin. After years of training across multiple disciplines and earning certifications in advanced aesthetic treatments, Anna opened her boutique studio in Adelaide.
-            </p>
-            <p>
-              What started as a small practice has blossomed into one of Adelaide&apos;s most trusted skin clinics, known for honest consultations, transparent pricing, and treatments that genuinely deliver. Every client who walks through our doors receives the same level of care and attention — because your skin deserves nothing less.
-            </p>
-            <div className="promise-card">
-              <h3>Our Promise</h3>
-              <span className="short-rule" />
-              <ul>
-                <li>Honest, no-pressure consultations</li>
-                <li>Transparent pricing with no hidden fees</li>
-                <li>Medical-grade treatments only</li>
-                <li>Ongoing skin health support</li>
-                <li>Results you can see and feel</li>
-              </ul>
+          <div className="meet-anna-layout">
+            <figure className="meet-anna-photo">
+              <img src="/img/anna.jpg" alt="Anna, founder and skin specialist at Anna Skin Care" loading="lazy" />
+              <figcaption><strong>Anna</strong><span>Founder &amp; Skin Specialist</span></figcaption>
+            </figure>
+            <div className="meet-anna-content">
+              <p className="eyebrow">Meet Anna</p>
+              <h2>A Passion Born From Purpose</h2>
+              <p>
+                Anna&apos;s journey into skincare began with a personal mission — to help people feel confident in their own skin. After years of training across multiple disciplines and earning certifications in advanced aesthetic treatments, Anna opened her boutique studio in Adelaide.
+              </p>
+              <p>
+                What started as a small practice has blossomed into one of Adelaide&apos;s most trusted skin clinics, known for honest consultations, transparent pricing, and treatments that genuinely deliver. Every client who walks through our doors receives the same level of care and attention — because your skin deserves nothing less.
+              </p>
+              <div className="promise-card">
+                <h3>Our Promise</h3>
+                <span className="short-rule" />
+                <ul>
+                  <li>Honest, no-pressure consultations</li>
+                  <li>Transparent pricing with no hidden fees</li>
+                  <li>Medical-grade treatments only</li>
+                  <li>Ongoing skin health support</li>
+                  <li>Results you can see and feel</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -470,7 +490,7 @@ function App() {
           </div>
           <div className="treatment-grid">
             {treatments.map((treatment, index) => (
-              <a className="treatment-card" href="#contact" key={treatment.name}>
+              <a className="treatment-card" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer" key={treatment.name}>
                 <span className="card-number">0{index + 1}</span>
                 <svg className="treatment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   {iconPaths[treatment.icon]}
@@ -481,7 +501,7 @@ function App() {
               </a>
             ))}
           </div>
-          <a className="text-link services-link" href="#contact">View all treatments <span>→</span></a>
+          <Link className="text-link services-link" to="/services">View all treatments <span>→</span></Link>
         </section>
 
         <section className="approach" id="results">
@@ -497,7 +517,7 @@ function App() {
               <div><span>02</span><p><strong>Medical-grade technology</strong><small>Evidence-led treatments and trusted products.</small></p></div>
               <div><span>03</span><p><strong>Results that last</strong><small>Long-term skin health, never quick fixes.</small></p></div>
             </div>
-            <a className="button button-outline-light" href="#contact">Meet your skin specialist</a>
+            <a className="button button-outline-light" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Meet your skin specialist</a>
           </div>
         </section>
 
@@ -529,43 +549,6 @@ function App() {
           </div>
         </section>
 
-        <section className="pricing section-pad" id="pricing">
-          <div className="section-heading">
-            <p className="eyebrow">Thoughtful care, clear pricing</p>
-            <h2>Treatment Pricing</h2>
-            <span className="short-rule" />
-          </div>
-          <div className="price-list">
-            <article className="price-card">
-              <div className="price-card-heading">
-                <h3>HIFU + Radio Frequency</h3>
-                <span>Free RF session</span>
-              </div>
-              <div className="price-row"><span>Full Face Lifting</span><strong>$345</strong></div>
-              <div className="price-row"><span>Eye Area &amp; Brow Lifting</span><strong>$129</strong></div>
-              <div className="price-row"><span>Double Chin &amp; Jawline</span><strong>$179</strong></div>
-              <div className="price-row"><span>Full Face + Double Chin</span><strong>$450</strong></div>
-            </article>
-            <article className="price-card">
-              <div className="price-card-heading"><h3>Chemical Peels</h3></div>
-              <div className="price-row"><span>Glow Refresh Peel</span><strong>$140</strong></div>
-              <div className="price-row"><span>Acne Clarifying Peel</span><strong>$150</strong></div>
-              <div className="price-row"><span>Melanostop Depigment Peel</span><strong>$180</strong></div>
-              <div className="price-row"><span>Premium Combination Peel</span><strong>$190</strong></div>
-            </article>
-            <article className="price-card">
-              <div className="price-card-heading">
-                <h3>Specialty Treatments</h3>
-                <span>Sale</span>
-              </div>
-              <div className="price-row"><span>CO₂ Fractional Laser</span><strong><del>$700</del> $350</strong></div>
-              <div className="price-row"><span>Premium Microneedling with Exosome (Exomide)</span><strong>$245</strong></div>
-              <div className="price-row"><span>Mesotherapy Booster – Single Session</span><strong>$165</strong></div>
-              <div className="price-row"><span>Mesotherapy Booster – 3 Sessions</span><strong>$425</strong></div>
-            </article>
-          </div>
-        </section>
-
         <section className="testimonials section-pad" id="testimonials">
           <div className="section-heading">
             <p className="eyebrow">Kind words</p>
@@ -592,7 +575,7 @@ function App() {
           <p className="contact-copy">Start your transformation with a personalised consultation. Let Anna assess your skin and recommend the perfect treatment plan — no obligation, no pressure.</p>
           <div className="contact-actions">
             <a className="button button-brown" href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Book a consultation</a>
-            <Link className="button button-outline-brown" to="/pricing" target="_blank" rel="noreferrer">View Pricing</Link>
+            <Link className="button button-outline-brown" to="/pricing">View Pricing</Link>
           </div>
           <span className="contact-flower" aria-hidden="true">✳</span>
         </section>
@@ -625,7 +608,7 @@ function App() {
           </div>
           <div className="footer-links">
             <div><span className="footer-title">Explore</span><Link to="/about">About</Link><Link to="/services">Services</Link><Link to="/pricing">Pricing</Link><Link to="/contact">Contact</Link></div>
-            <div><span className="footer-title">Get in touch</span><a href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Instagram</a><Link to="/contact">Book Now</Link><span>Adelaide, South Australia</span></div>
+            <div><span className="footer-title">Get in touch</span><a href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.instagram.com/anna_skin_care/" target="_blank" rel="noreferrer">Book Now</a><span>Adelaide, South Australia</span></div>
           </div>
         </div>
         <div className="footer-bottom"><span>© 2026 Anna Skin Care</span><span>Thoughtful care. Beautiful skin.</span></div>
